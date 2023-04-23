@@ -63,43 +63,29 @@ def create_machine(path):
     Q = { i for item in blocks["STATES"].split("\n") for i in item.split(";") }
     Sigma = { i for item in blocks["ALPHABET"].split("\n") for i in item.split(";") }
     #Gamma = { i for item in blocks["TAPE_ALPHABET"].split("\n") for i in item.split(";") }
-    q0 = blocks["START_STATE"].strip()
-    Space = blocks["SPACE"].strip()
+    q0 = blocks["START_STATE"].strip(";\n ")
+    Space = blocks["SPACE"].strip(";\n ")
     F = { i for item in blocks["FINAL_STATES"].split("\n") for i in item.split(";") }
     Program = {}
     for program_line in blocks["PROGRAM"].split("\n"):
         split = program_line.split(";")
         left = tuple(map(str.strip, split[0].strip("()").split(",")))
         right = { tuple(map(str.strip, item.strip("()").split(","))) for item in split[1:] }
+        right.discard(("",))
+        right_with_directions = set()
         for item in right:
             (q, s, d) = item
-            right.discard(item)
             if d == "R":
-                right.add((q, s, NondeterministicTuringMachine.Direction.R))
+                right_with_directions.add((q, s, NondeterministicTuringMachine.Direction.R))
             elif d == "L":
-                right.add((q, s, NondeterministicTuringMachine.Direction.L))
-        Program[left] = right
+                right_with_directions.add((q, s, NondeterministicTuringMachine.Direction.L))
+        Program[left] = right_with_directions
     Program.pop(("",))
     nmt = NondeterministicTuringMachine(Q, Sigma, q0, Space, F, Program)
     return nmt
 
-nmt = create_machine("program.txt")
-nmt.run_program("111")
-
-'''if __name__ == "__main__":
-    Q = {0, 1, 2, 3}
-    Sigma = {"0", "1", "B"}
-    q0 = 0
-    Space = "B"
-    F = {3}
-    Program = {
-        (0, "1"): {(0, "0", NondeterministicTuringMachine.Direction.R), (1, "0", NondeterministicTuringMachine.Direction.R)},
-        (1, "0"): {(2, "1", NondeterministicTuringMachine.Direction.L)},
-        (1, "B"): {(3, "B", NondeterministicTuringMachine.Direction.R)},
-        (2, "0"): {(0, "0", NondeterministicTuringMachine.Direction.R)}
-    }
-    input_word = "111"
-
-    nmt = NondeterministicTuringMachine(Q, Sigma, q0, Space, F)
-    nmt.run_program()
-'''
+if __name__ == "__main__":
+    path = input("Введите путь к файлу с конфигурацией и программой: ")
+    inp = input("Введите исходное слово на ленте: ")
+    nmt = create_machine(path)
+    nmt.run_program(inp)
