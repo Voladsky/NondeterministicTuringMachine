@@ -24,5 +24,3 @@ q3;
 (q2, 0);(q0, 0, R);
 %END
 ```
-
-Running: ```./turing.py *path_to_program*```
