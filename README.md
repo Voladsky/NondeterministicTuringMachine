@@ -3,7 +3,7 @@
 A simple example of a Nondeterministic Turing Machine. The program for the machine is written in a text file with a structure described below:
 
 There are headers written single on a line: ```%STATES```, ```%ALPHABET```, ```%START_STATE```, ```%SPACE```, ```%FINAL_STATES```, ```%PROGRAM```, ```%END```.
-File must end with an ```%END``` statement. After a header there must be a line break and then required information splitted with ```;```
+File must end with an ```%END``` statement. After a header there must be a line break and then required information splitted with ```;```. All lines except headers must end with ```;```
 An example of a configuring and programming NTM are given below:
 ```
 %STATES
